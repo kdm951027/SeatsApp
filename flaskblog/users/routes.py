@@ -2,7 +2,7 @@
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
 from flaskblog.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
 RequestResetForm, ResetPasswordForm, LocationForm)
-from flaskblog.models import User, Post
+from flaskblog.models import User, Post, Location
 from flaskblog import db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 from flaskblog.users.utils import save_picture, send_reset_email
@@ -108,22 +108,25 @@ def add_location():
             form = LocationForm()
             if form.validate_on_submit():
                 location = Location(name=form.name.data)
+                db.session.add(location)
+                db.session.commit()
+                flash('New Location Added in!','success')
+                return redirect(url_for('main.home'))
             return render_template('add_location.html',title='Add Location', form=form)
         else:
             return redirect(url_for('main.home'))
-            # return render_template('add_location.html',title='Add Location', form=form)
-    # form = LocationForm()
+
     return redirect(url_for('main.home'))
 
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('main.home'))
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
-        db.session.add(user)
-        db.session.commit()
-        flash('Your account has been created! You can log in now','success')
-        return redirect(url_for('users.login'))
-    return render_template('register.html', title = 'Register', form=form)
+# def register():
+#     if current_user.is_authenticated:
+#         return redirect(url_for('main.home'))
+#     form = RegistrationForm()
+#     if form.validate_on_submit():
+#         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+#         user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+#         db.session.add(user)
+#         db.session.commit()
+#         flash('Your account has been created! You can log in now','success')
+#         return redirect(url_for('users.login'))
+#     return render_template('register.html', title = 'Register', form=form)
