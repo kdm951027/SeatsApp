@@ -3,7 +3,7 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flask_login import current_user
-from flaskblog.models import User
+from flaskblog.models import User, Location
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
@@ -62,3 +62,14 @@ class ResetPasswordForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
+
+class LocationForm(FlaskForm):
+    name = StringField('Location Name', validators=[DataRequired(), Length(min=2, max=20)])
+    picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg','png'])])
+
+    def validate_name(self, name):
+        location  = Location.query.filter_by(name=name.data).first()
+        if location:
+            raise ValidationError('That Location is already in DB')
+
+    submit = SubmitField('Add')
