@@ -47,15 +47,22 @@ class Location(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
-    seats = db.relationship('Seat', backref='seat', lazy=True)
+    seats = db.relationship('Seat', backref='where', lazy=True)
 
     def __repr__(self):
         return f"Location('{self.name}','{self.image_file}')"
 
 class Seat(db.Model):
+
+    __table_args__ = (
+        db.UniqueConstraint('location_name', 'col_num', 'row_num', name='unique_seat_info'),
+    )
+
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    location_name = db.Column(db.String(100), nullable=False)
+    col_num = db.Column(db.Integer, nullable=False)
+    row_num = db.Column(db.Integer, nullable=False)
     location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
 
     def __repr__(self):
-        return f"Seat('{self.name}')"
+        return f"Seat('{self.location_name}', '{self.col_num}','{self.row_num}')"

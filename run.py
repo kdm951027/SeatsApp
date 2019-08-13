@@ -1,5 +1,5 @@
 from flaskblog import create_app
-# from flaskblog import create_app, db
+# from flaskblog import create_app,
 
 app = create_app()
 # with app.app_context():

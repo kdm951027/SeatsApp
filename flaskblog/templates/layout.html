@@ -27,7 +27,10 @@
         <div class="navbar-nav mr-auto">
           <a class="nav-item nav-link" href="{{url_for('main.home')}}">Home</a>
           <a class="nav-item nav-link" href="{{url_for('main.about')}}">About</a>
-          <a class="nav-item nav-link" href="{{url_for('users.add_location')}}">Seats</a>
+          {% if current_user.username == "kdm951027" %}
+          <a class="nav-item nav-link" href="{{url_for('locations.add_location')}}">Add Loc</a>
+          <a class="nav-item nav-link" href="{{url_for('locations.add_seat')}}">Add Seats</a>
+          {% endif %}
         </div>
         <!-- Navbar Right Side -->
         <div class="navbar-nav">
@@ -73,70 +76,6 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col">
-      <button type="button" class="btn btn-primary">Primary</button>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-primary">Primary</button>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-primary">Primary</button>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-primary">Primary</button>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-primary">Primary</button>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-primary">Primary</button>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-primary">Primary</button>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-primary">Primary</button>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-primary">Primary</button>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-primary">Primary</button>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-primary">Primary</button>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-primary">Primary</button>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-primary">Primary</button>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-primary">Primary</button>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col bg-success">1 of 4</div>
-    <div class="col bg-warning">2 of 4</div>
-    <div class="col bg-success">3 of 4</div>
-    <div class="col bg-warning">4 of 4</div>
-    <div class="col bg-success">1 of 4</div>
-    <div class="col bg-warning">2 of 4</div>
-    <div class="col bg-success">3 of 4</div>
-    <div class="col bg-warning">4 of 4</div>
-    <div class="col bg-success">1 of 4</div>
-    <div class="col bg-warning">2 of 4</div>
-    <div class="col bg-success">3 of 4</div>
-    <div class="col bg-warning">4 of 4</div>
-  </div>
-
-  <!-- <div class="row">
-    <div class="col-md-8">
-
-    </div>
-  </div > -->
 </main>
   <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
