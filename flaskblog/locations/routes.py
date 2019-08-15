@@ -2,7 +2,6 @@ from flask import render_template, url_for, flash, redirect, request, abort, Blu
 from flaskblog.models import Location, Seat
 from flaskblog import db
 from flask_login import login_user, current_user, logout_user, login_required
-from flaskblog.users.utils import save_picture, send_reset_email
 from flaskblog.locations.forms import LocationForm, SeatForm
 
 locations = Blueprint('locations', __name__)
@@ -43,3 +42,10 @@ def add_seat():
         else:
             return redirect(url_for('main.home'))
     return redirect(url_for('main.home'))
+
+@locations.route("/location/<string:name>")
+def show_seats(name):
+    # page = request.args.get('page', 1, type=int)
+    location = Location.query.filter_by(name=name).first_or_404()
+    seats = Seat.query.filter_by(where=location)
+    return render_template('location.html',seats=seats, location=location)

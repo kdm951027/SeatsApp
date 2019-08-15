@@ -78,3 +78,22 @@ a.article-title:hover {
 .account-heading {
   font-size: 2.5rem;
 }
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  grid-gap: 50px;
+  background-color: #ffffff;
+  padding: 10px;
+  /* grid-template-areas: */
+  margin-bottom: 40px;
+
+}
+
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 30px;
+  text-align: center;
+}

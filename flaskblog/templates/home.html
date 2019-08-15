@@ -30,7 +30,8 @@
       <div class="card-body">
         <h4 class="card-title">{{ location.name }}</h4>
         <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>
-        <a href class="btn btn-warning stretched-link">Visit</a>
+        <a class="mr-2" href="{{ url_for('locations.show_seats', name=location.name) }}">{{ location.name }}</a>
+        <!-- <a href class="btn btn-warning stretched-link">Visit</a> -->
     </article>
   {% endfor %}
   {%for seat in seats%}
@@ -38,7 +39,7 @@
       <div class="card-body">
         <h4 class="card-title">{{ seat.row_num, seat.col_num, seat.location_id }}</h4>
         <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>
-        <a href class="btn btn-warning stretched-link">Visit</a>
+        <!-- <a href class="btn btn-warning stretched-link">Visit</a> -->
     </article>
   {% endfor %}
 
