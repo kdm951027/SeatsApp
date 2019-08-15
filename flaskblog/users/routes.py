@@ -10,6 +10,9 @@ users = Blueprint('users', __name__)
 
 @users.route("/register", methods=['GET','POST'])
 def register():
+
+    db.create_all()
+    
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
     form = RegistrationForm()

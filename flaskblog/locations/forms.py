@@ -18,8 +18,7 @@ class LocationForm(FlaskForm):
 
 class SeatForm(FlaskForm):
     location_name = StringField('Location Name', validators=[DataRequired(), Length(min=2, max=20)])
-    col_num = IntegerField('Column Number (1 ~ 12)', validators=[DataRequired(), NumberRange(min=1, max=12)])
-    row_num = IntegerField('Row Number (1 ~ 12)', validators=[DataRequired(), NumberRange(min=1, max=12)])
+    seat_num = IntegerField('Seat Number (1 ~ 12)', validators=[DataRequired(), NumberRange(min=1, max=12)])
 
     def validate_location_name(self, location_name):
         location  = Location.query.filter_by(name=location_name.data).first()
@@ -35,3 +34,7 @@ class SeatForm(FlaskForm):
         #                 raise ValidationError('That Seat is already in DB')
 
     submit = SubmitField('Add')
+
+class ReserveForm(FlaskForm):
+    message = StringField('Message', validators=[Length(min=0, max=40)])
+    submit = SubmitField('Reserve')

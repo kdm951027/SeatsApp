@@ -15,7 +15,7 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
-    # location = db.relationship('Location', backref='cur_loc')
+    seat_id = db.Column(db.Integer, db.ForeignKey('seat.id'))
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
@@ -53,16 +53,15 @@ class Location(db.Model):
         return f"Location('{self.name}','{self.image_file}')"
 
 class Seat(db.Model):
-
     __table_args__ = (
-        db.UniqueConstraint('location_name', 'col_num', 'row_num', name='unique_seat_info'),
+        db.UniqueConstraint('location_name', 'seat_num', name='unique_seat_info'),
     )
 
     id = db.Column(db.Integer, primary_key=True)
     location_name = db.Column(db.String(100), nullable=False)
-    col_num = db.Column(db.Integer, nullable=False)
-    row_num = db.Column(db.Integer, nullable=False)
+    seat_num = db.Column(db.Integer, nullable=False)
     location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
+    users = db.relationship('User', backref='seated', lazy=True)
 
     def __repr__(self):
-        return f"Seat('{self.location_name}', '{self.col_num}','{self.row_num}')"
+        return f"Seat('{self.location_name}', '{self.seat_num}')"

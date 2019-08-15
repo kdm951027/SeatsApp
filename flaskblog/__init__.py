@@ -27,6 +27,7 @@ def create_app(config_class=Config):
     from flaskblog.posts.routes import posts
     from flaskblog.main.routes import main
     from flaskblog.locations.routes import locations
+    
     app.register_blueprint(users)
     app.register_blueprint(posts)
     app.register_blueprint(main)

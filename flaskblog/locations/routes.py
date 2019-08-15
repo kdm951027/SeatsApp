@@ -2,14 +2,12 @@ from flask import render_template, url_for, flash, redirect, request, abort, Blu
 from flaskblog.models import Location, Seat
 from flaskblog import db
 from flask_login import login_user, current_user, logout_user, login_required
-from flaskblog.locations.forms import LocationForm, SeatForm
+from flaskblog.locations.forms import LocationForm, SeatForm, ReserveForm
 
 locations = Blueprint('locations', __name__)
 
 @locations.route("/add_location", methods=['GET','POST'])
 def add_location():
-    db.create_all()
-
     if current_user.is_authenticated:
         if (current_user.username == "kdm951027"):
             form = LocationForm()
@@ -31,8 +29,8 @@ def add_seat():
             form = SeatForm()
             if form.validate_on_submit():
                 location_id_from_name  = Location.query.filter_by(name=form.location_name.data).first()
-                seat = Seat(location_name=form.location_name.data, col_num=form.col_num.data, \
-                row_num=form.row_num.data, where=location_id_from_name)
+                seat = Seat(location_name=form.location_name.data, seat_num=form.seat_num.data, \
+                where=location_id_from_name)
 
                 db.session.add(seat)
                 db.session.commit()
@@ -45,7 +43,22 @@ def add_seat():
 
 @locations.route("/location/<string:name>")
 def show_seats(name):
-    # page = request.args.get('page', 1, type=int)
     location = Location.query.filter_by(name=name).first_or_404()
     seats = Seat.query.filter_by(where=location)
     return render_template('location.html',seats=seats, location=location)
+
+@locations.route("/reserve/<int:seat_id>", methods=['GET','POST'])
+def reserve(seat_id):
+    if current_user.is_authenticated:
+        form = ReserveForm()
+        seat = Seat.query.filter_by(id=seat_id).first_or_404()
+        if form.validate_on_submit():
+            # seat = Seat.query.filter_by(id=seat_id)
+            # seat.seated = current_user
+            current_user.seat_id = seat.id
+            db.session.commit()
+            flash('Reserved!','success')
+            return redirect(url_for('main.home'))
+        return render_template('reserve.html', seat_id = seat.id, title='Reserve Seat', form=form)
+    else:
+        return redirect(url_for('main.home'))
