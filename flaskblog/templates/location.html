@@ -14,7 +14,7 @@
       <div class="seat_name">SEAT {{seat.seat_num}}</div>
       {%if seat.users%}
         {%if seat.users[0] == current_user%}
-          <a href="{{ url_for('main.home', page=page_num) }}"><button class="button button1"> Leave </button></a>
+          <a href="{{ url_for('locations.leave', seat_id=seat.id) }}"><button class="button button1"> Leave </button></a>
         {%else%}
           <a href="{{ url_for('main.home', page=page_num) }}"><button class="button button1">See info</button></a>
         {%endif%}

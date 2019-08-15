@@ -62,3 +62,15 @@ def reserve(seat_id):
         return render_template('reserve.html', seat_id = seat.id, title='Reserve Seat', form=form)
     else:
         return redirect(url_for('main.home'))
+
+
+@locations.route("/leave/<int:seat_id>", methods=['GET','POST'])
+def leave(seat_id):
+    if current_user.is_authenticated:
+        seat = Seat.query.filter_by(id=seat_id).first_or_404()
+        current_user.seat_id = None
+        db.session.commit()
+        flash('Left!','success')
+        return redirect(url_for('main.home'))
+
+    return redirect(url_for('main.about'))
