@@ -65,3 +65,13 @@ class Seat(db.Model):
 
     def __repr__(self):
         return f"Seat('{self.location_name}', '{self.seat_num}')"
+
+# class Message(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+#     content = db.Column(db.Text, nullable=False)
+#     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+#     receiver_id = db.relationship('User', backref='received', lazy=True)
+#
+#     def __repr__(self):
+#         return f"Post('{self.sender}','{self.date_posted}')"

@@ -1,31 +1,34 @@
 {%extends "layout.html"%}
 {%block content%}
-  <h1 class="mb-3">{{ location.name }} has ({{ seats.count() }}) seats</h1>
-  <!-- {%for seat in seats%}
-    <article class="media content-section">
-      <div class="card-body">
-        <h4 class="card-title">{{ seat.seat_num, seat.location_id, seat.location_name }}</h4>
-    </article>
-  {% endfor %} -->
+  <h1 class="mb-3 text-center">[{{ location.name }}] has {{ seats.count() }} seats</h1>
 
   <div class="grid-container">
     {%for seat in seats%}
-    <div class="grid-item">
-      <div class="seat_name">SEAT {{seat.seat_num}}</div>
-      {%if seat.users%}
-        {%if seat.users[0] == current_user%}
-          <a href="{{ url_for('locations.leave', seat_id=seat.id) }}"><button class="button button1"> Leave </button></a>
-        {%else%}
-          <a href="{{ url_for('main.home', page=page_num) }}"><button class="button button1">See info</button></a>
-        {%endif%}
+
+    {%if seat.users%}
+      {%if seat.users[0] == current_user%}
+        <div class="grid-item occupied-seat">
+          <div class="seat_name">SEAT {{seat.seat_num}}</div>
+          <a href="{{ url_for('locations.leave', seat_id=seat.id, location_name=location.name) }}"><button class="button button1"> Leave </button></a>
+          <a href="{{ url_for('main.home', page=page_num) }}"><button class="button button1">Update</button></a>
+        </div>
       {%else%}
-        <a href="{{ url_for('locations.reserve', seat_id=seat.id) }}"><button class="button button1">reserve</button></a>
-        <!-- <a href="{{ url_for('main.home', page=page_num) }}"><button class="button button1">visit</button></a> -->
+        <div class="grid-item owned-seat">
+          <div class="seat_name">SEAT {{seat.seat_num}}</div>
+          <a href="{{ url_for('users.profile', username=(seat.users)[0].username)}}"><button class="button button1">See info</button></a>
+          <a href="{{ url_for('main.home', page=page_num) }}"><button class="button button1">Message</button></a>
+        </div>
       {%endif%}
-      <!-- <a href="{{ url_for('main.home', page=page_num) }}"><button class="button button1">reserve</button></a> -->
-      <a href="{{ url_for('main.home', page=page_num) }}"><button class="button button1">testing!</button></a>
-      <!-- <button class="button button1">reserve</button> -->
-    </div>
+    {%else%}
+      <div class="grid-item empty-seat">
+        <div class="seat_name">SEAT {{seat.seat_num}}</div>
+        <a href="{{ url_for('locations.reserve', seat_id=seat.id, location_name=location.name) }}"><button class="button button1">reserve</button></a>
+        <a href="{{ url_for('main.home', page=page_num) }}"><button class="button button1">testing!</button></a>
+      </div>
+    {%endif%}
+
+
+
     {% endfor %}
 
 <!--

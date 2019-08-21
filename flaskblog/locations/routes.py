@@ -47,8 +47,9 @@ def show_seats(name):
     seats = Seat.query.filter_by(where=location)
     return render_template('location.html',seats=seats, location=location)
 
-@locations.route("/reserve/<int:seat_id>", methods=['GET','POST'])
-def reserve(seat_id):
+@locations.route("/reserve/<int:seat_id>/<string:location_name>", methods=['GET','POST'])
+@login_required
+def reserve(seat_id, location_name):
     if current_user.is_authenticated:
         form = ReserveForm()
         seat = Seat.query.filter_by(id=seat_id).first_or_404()
@@ -58,19 +59,19 @@ def reserve(seat_id):
             current_user.seat_id = seat.id
             db.session.commit()
             flash('Reserved!','success')
-            return redirect(url_for('main.home'))
+            return redirect(url_for('locations.show_seats', name=location_name))
         return render_template('reserve.html', seat_id = seat.id, title='Reserve Seat', form=form)
     else:
         return redirect(url_for('main.home'))
 
 
-@locations.route("/leave/<int:seat_id>", methods=['GET','POST'])
-def leave(seat_id):
+@locations.route("/leave/<int:seat_id>/<string:location_name>", methods=['GET','POST'])
+@login_required
+def leave(seat_id, location_name):
     if current_user.is_authenticated:
         seat = Seat.query.filter_by(id=seat_id).first_or_404()
         current_user.seat_id = None
         db.session.commit()
-        flash('Left!','success')
-        return redirect(url_for('main.home'))
-
+        flash('You left the seat','success')
+        return redirect(url_for('locations.show_seats', name=location_name))
     return redirect(url_for('main.about'))

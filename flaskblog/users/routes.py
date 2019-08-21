@@ -10,9 +10,8 @@ users = Blueprint('users', __name__)
 
 @users.route("/register", methods=['GET','POST'])
 def register():
-
-    db.create_all()
-    
+    # if db is erased, uncomment the following line
+    # db.create_all()
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
     form = RegistrationForm()
@@ -64,7 +63,6 @@ def account():
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('account.html', title='Account', image_file=image_file, form=form)
 
-
 @users.route("/user/<string:username>")
 def user_posts(username):
     page = request.args.get('page', 1, type=int)
@@ -101,3 +99,8 @@ def reset_token(token):
         flash('Your password has been updated!','success')
         return redirect(url_for('users.login'))
     return render_template('reset_token.html',title='Reset Password', form=form)
+
+@users.route("/profile/<string:username>")
+def profile(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return render_template('profile.html', user=user)

@@ -18,7 +18,7 @@ class LocationForm(FlaskForm):
 
 class SeatForm(FlaskForm):
     location_name = StringField('Location Name', validators=[DataRequired(), Length(min=2, max=20)])
-    seat_num = IntegerField('Seat Number (1 ~ 12)', validators=[DataRequired(), NumberRange(min=1, max=12)])
+    seat_num = IntegerField('Seat Number (1 ~ 20)', validators=[DataRequired(), NumberRange(min=1, max=20)])
 
     def validate_location_name(self, location_name):
         location  = Location.query.filter_by(name=location_name.data).first()
