@@ -9,7 +9,7 @@
       {%if seat.users[0] == current_user%}
         <div class="grid-item occupied-seat">
           <div class="seat_name">SEAT {{seat.seat_num}}</div>
-          <a href="{{ url_for('locations.leave', seat_id=seat.id, location_name=location.name) }}"><button class="button button1"> Leave </button></a>
+          <a href="{{ url_for('locations.leave', seat_id=seat.id, location_name=location.name) }}"><button class="button button1">Leave Seat</button></a>
           <a href="{{ url_for('main.home', page=page_num) }}"><button class="button button1">Update</button></a>
         </div>
       {%else%}

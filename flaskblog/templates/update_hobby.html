@@ -1,0 +1,70 @@
+{%extends "layout.html"%}
+{%block content%}
+  <div class="content-section">
+    <div class="media">
+      <img class="rounded-circle account-img" src="{{image_file}}">
+      <div class="media-body">
+        <h2 class="account-heading">{{current_user.username}}</h2>
+        <p class="text-secondary">{{current_user.email}}</p>
+      </div>
+    </div>
+
+    {%for hobby in current_user.hobbies%}
+      <article class="media content-section">
+        <div class="media-body">
+          <p class="article-content">{{ hobby.name }}</p>
+          <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+        </div>
+      </article>
+    {% endfor %}
+
+    <form method="POST" action="", enctype="multipart/form-data">
+      {{form.hidden_tag()}}
+      <fieldSet class="form-group">
+        <legend class="border-bottom mb-4">Hobby Info</legend>
+        <div class="form-group">
+          {{form.name.label(class="form-control-label")}}
+          {% if form.name.errors %}
+            {{form.name(class="form-control form-control-lg is-invalid")}}
+            <div class='invalid-feedback'>
+              {% for error in form.name.errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% else %}
+            {{form.name(class="form-control form-control-lg")}}
+          {% endif %}
+        </div>
+        <div class="form-group">
+          {{form.type.label(class="form-control-label")}}
+          {{ form.type }}
+        </div>
+
+      </fieldset>
+      <div class="form-group">
+        {{form.submit(class="btn btn-outline-info")}}
+      </div>
+    </form>
+  </div>
+
+
+    <!-- Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Remove Hobby?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="{{url_for('users.delete_hobby', hobby_id=hobby.id)}}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{%endblock content%}

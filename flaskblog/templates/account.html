@@ -38,6 +38,11 @@
               {{form.email(class="form-control form-control-lg")}}
             {% endif %}
           </div>
+
+          <a href="{{ url_for('users.update_hobby') }}">
+            <button type="button" class="btn btn-primary mb-2">Update Hobbies</button>
+          </a>
+
           <div class="form-group">
             {{ form.picture.label() }}
             {{ form.picture(class="form-control-file") }}

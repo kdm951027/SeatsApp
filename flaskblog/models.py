@@ -1,12 +1,37 @@
+from enum import Enum
 from flaskblog import db, login_manager
 from datetime import datetime
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app
+from flask import current_app, redirect, request
+
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    return redirect('/login?next=' + request.url)
+
+class ExtendedEnum(Enum):
+    @classmethod
+    def list(cls):
+        return list(map(lambda c: c.value, cls))
+
+class hobbyType(ExtendedEnum):
+    outdoor = "Outdoor"
+    indoor = "Indoor"
+    game = "Game"
+
+class Hobby(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    type = db.Column(db.Enum(hobbyType))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return f"Hobby('{self.name}','{self.type}')"
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -15,6 +40,7 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
+    hobbies = db.relationship('Hobby', backref='hobbier', lazy=True)
     seat_id = db.Column(db.Integer, db.ForeignKey('seat.id'))
 
     def get_reset_token(self, expires_sec=1800):

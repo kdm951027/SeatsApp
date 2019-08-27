@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
 from flaskblog.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
-RequestResetForm, ResetPasswordForm)
-from flaskblog.models import User, Post, Location
+RequestResetForm, ResetPasswordForm, UpdateHobbyForm)
+from flaskblog.models import User, Post, Location, Hobby, hobbyType
 from flaskblog import db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 from flaskblog.users.utils import save_picture, send_reset_email
@@ -10,8 +10,6 @@ users = Blueprint('users', __name__)
 
 @users.route("/register", methods=['GET','POST'])
 def register():
-    # if db is erased, uncomment the following line
-    # db.create_all()
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
     form = RegistrationForm()
@@ -34,7 +32,8 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            return redirect(url_for(next_page)) if next_page else redirect(url_for('main.home'))
+            # return redirect(url_for(next_page)) if next_page else redirect(url_for('main.home'))
+            return redirect(next_page) if next_page else redirect(url_for('main.home'))
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html', title='Login', form=form)
@@ -62,6 +61,28 @@ def account():
         form.email.data = current_user.email
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('account.html', title='Account', image_file=image_file, form=form)
+
+@users.route("/update_hobby", methods=['GET','POST'])
+@login_required
+def update_hobby():
+    form = UpdateHobbyForm()
+    if form.validate_on_submit():
+        hobby = Hobby(name=form.name.data, type=form.type.data, hobbier=current_user)
+        db.session.add(hobby)
+        db.session.commit()
+        flash('New hobby has been updated!', 'success')
+        return redirect(url_for('users.account'))
+    return render_template('update_hobby.html', title='Update Hobby', form=form)
+
+@users.route("/update_hobby/<int:hobby_id>/delete", methods=['POST'])
+@login_required
+def delete_hobby(hobby_id):
+    hobby = Hobby.query.get_or_404(hobby_id)
+    db.session.delete(hobby)
+    db.session.commit()
+    flash('Your Hobby has been removed.', 'success')
+    return redirect(url_for('users.account'))
+
 
 @users.route("/user/<string:username>")
 def user_posts(username):

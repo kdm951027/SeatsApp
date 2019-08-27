@@ -1,9 +1,9 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flask_login import current_user
-from flaskblog.models import User, Location
+from flaskblog.models import User, Location, hobbyType
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
@@ -47,6 +47,19 @@ class UpdateAccountForm(FlaskForm):
             email = User.query.filter_by(email=email.data).first()
             if email:
                 raise ValidationError('That email is taken')
+
+class UpdateHobbyForm(FlaskForm):
+    enum_types = []
+    for hobby in hobbyType.list():
+        enum_types.append((hobby, hobby))
+
+    type = RadioField('Type', choices=enum_types)
+    name = StringField('Name', validators=[DataRequired(), Length(min=2, max=20)])
+    submit = SubmitField('Add Hobby')
+
+    def validate_name(self, name):
+        if (name in current_user.hobbies):
+            raise ValidationError('That username is taken')
 
 
 class RequestResetForm(FlaskForm):
