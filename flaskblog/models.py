@@ -20,9 +20,10 @@ class ExtendedEnum(Enum):
         return list(map(lambda c: c.value, cls))
 
 class hobbyType(ExtendedEnum):
-    outdoor = "Outdoor"
-    indoor = "Indoor"
-    game = "Game"
+    outdoor = "outdoor"
+    indoor = "indoor"
+    game = "game"
+    course = "course"
 
 class Hobby(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -74,14 +74,16 @@ def update_hobby():
         return redirect(url_for('users.account'))
     return render_template('update_hobby.html', title='Update Hobby', form=form)
 
-@users.route("/update_hobby/<int:hobby_id>/delete", methods=['POST'])
+@users.route("/update_hobby/<int:hobby_id>/delete", methods=['GET','POST'])
 @login_required
 def delete_hobby(hobby_id):
     hobby = Hobby.query.get_or_404(hobby_id)
+    if hobby.hobbier != current_user:
+        abort(403)
     db.session.delete(hobby)
     db.session.commit()
     flash('Your Hobby has been removed.', 'success')
-    return redirect(url_for('users.account'))
+    return redirect(url_for('users.update_hobby'))
 
 
 @users.route("/user/<string:username>")
