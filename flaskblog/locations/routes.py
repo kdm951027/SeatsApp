@@ -9,7 +9,7 @@ locations = Blueprint('locations', __name__)
 @locations.route("/add_location", methods=['GET','POST'])
 def add_location():
     if current_user.is_authenticated:
-        if (current_user.username == "kdm951027"):
+        if (current_user.username == "admin"):
             form = LocationForm()
             if form.validate_on_submit():
                 location = Location(name=form.name.data)
@@ -25,7 +25,7 @@ def add_location():
 @locations.route("/add_seat", methods=['GET','POST'])
 def add_seat():
     if current_user.is_authenticated:
-        if (current_user.username == "kdm951027"):
+        if (current_user.username == "admin"):
             form = SeatForm()
             if form.validate_on_submit():
                 location_id_from_name  = Location.query.filter_by(name=form.location_name.data).first()
