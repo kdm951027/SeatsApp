@@ -8,6 +8,7 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+  <link rel="stylesheet" href="{{url_for('static', filename='floorplans/floorplan.css')}}">
 
   <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -35,7 +36,6 @@
             <a class="nav-item nav-link" href="{{url_for('main.about')}}">About</a>
             {% if current_user.username == "admin" %}
             <a class="nav-item nav-link" href="{{url_for('locations.add_location')}}">Add Loc</a>
-            <a class="nav-item nav-link" href="{{url_for('locations.add_seat')}}">Add Seats</a>
             {% endif %}
           </div>
           <!-- Navbar Right Side -->

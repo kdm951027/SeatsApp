@@ -30,6 +30,10 @@
       <div class="card-body">
         <h4 class="card-title">{{ location.name }}</h4>
         <a class="mr-2" href="{{ url_for('locations.show_seats', name=location.name) }}"><button type="button" class="btn btn-warning">Visit!</button></a>
+        {% if current_user.username == "admin" %}
+            <a class="mr-2" href="{{ url_for('locations.add_seat', locationName = location.name) }}"><button type="button" class="btn btn-warning">Add Seats</button></a>
+        {% endif %}
+
         <!-- <a href class="btn btn-warning stretched-link">Visit</a> -->
     </article>
   {% endfor %}

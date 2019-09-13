@@ -25,17 +25,21 @@
     {% endfor %}
   </div>
 
-  <button class="btn btn-outline-info mb-2" onclick="showAddedSeats()">hello</button>
-  <div id="added_seats_div">"some text"</div>
+  <div>
+    {%for ex_seat in existing_seats%}
+      {{ex_seat.seat_num}}
+    {% endfor %}
+  </div>
 
   <div class="content-section">
     <form method="POST" action="">
       {{form.hidden_tag()}}
       <fieldSet class="form-group">
         <legend class="border-bottom mb-4">Add Seat</legend>
+
         <div class="form-group">
           {{form.location_name.label(class="form-control-label")}}
-          {% if form.location_name.errors %}
+          {% if form.seat_num.errors %}
             {{form.location_name(class="form-control form-control-lg is-invalid")}}
             <div class='invalid-feedback'>
               {% for error in form.location_name.errors %}
@@ -43,9 +47,11 @@
               {% endfor %}
             </div>
           {% else %}
-            {{form.location_name(class="form-control form-control-lg")}}
+            <!-- {{form.seat_num(class="form-control form-control-lg", id="floor_seats")}} -->
+             {{form.location_name(class="form-control form-control-lg", value=locationName)}}
           {% endif %}
         </div>
+
         <div class="form-group">
           {{form.seat_num.label(class="form-control-label")}}
           {% if form.seat_num.errors %}
@@ -56,9 +62,10 @@
               {% endfor %}
             </div>
           {% else %}
-            {{form.seat_num(class="form-control form-control-lg")}}
+             {{form.seat_num(class="form-control form-control-lg", id="floor_seats")}}
           {% endif %}
         </div>
+
       </fieldset>
       <div class="form-group">
         {{form.submit(class="btn btn-outline-info")}}
@@ -77,20 +84,19 @@
       return prev;
     }
 
-    function addNewSeats(evt, prev, seats) {
+    function addNewSeats(prev, seats) {
       if (document.querySelector('.draggable-container--over') == null) {
         console.log("not defined");
       }
       else{
         cur = document.getElementsByClassName("draggable-container--over")[0].id;
-        a = evt.dropzone;
-        console.log(a);
         if (prev == cur){
           console.log("stayed");
         }
         else{
           seats.push(cur);
           console.log("moved");
+          modifyForm();
         }
       }
     }//end of addNewSeats
@@ -113,14 +119,20 @@
     var previous_spot = 0;
     var current_spot;
 
-    function showAddedSeats() {
-      console.log(added_seats);
-      document.getElementById("added_seats_div").innerHTML = added_seats;
+    // function showAddedSeats() {
+    //   console.log(added_seats);
+    //   document.getElementById("floor_seats").value = added_seats.join();
+    // }
+
+    function modifyForm() {
+      document.getElementById("floor_seats").value = added_seats.join();
+      // document.getElementById("floor_seats").setAttribute('value', 'defaultValue');
+      // console.log(document.getElementById("floor_seats").id);
     }
 
 
   droppable.on('drag:start', (evt) => previous_spot = getPrev(evt, added_seats));
-  droppable.on('drag:stop', (evt) => addNewSeats(evt, previous_spot, added_seats));
+  droppable.on('drag:stop', () => addNewSeats(previous_spot, added_seats));
 
   </script>
 

@@ -117,7 +117,7 @@ div.seat_name {
 }
 
 /* draggable for floorplan design */
-.droppable.draggable-dropzone--occupied{
+/* .droppable.draggable-dropzone--occupied{
   height: 70px;
   width: auto;
 }
@@ -168,4 +168,4 @@ div.seat_name {
 
 .floor_options > div {
   border: 1px solid #000000;
-}
+} */

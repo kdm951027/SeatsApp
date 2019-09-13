@@ -22,21 +22,28 @@ def add_location():
             return redirect(url_for('main.home'))
     return redirect(url_for('main.home'))
 
-@locations.route("/add_seat", methods=['GET','POST'])
-def add_seat():
+@locations.route("/add_seat/<string:locationName>", methods=['GET','POST'])
+def add_seat(locationName):
     if current_user.is_authenticated:
         if (current_user.username == "admin"):
             form = SeatForm()
+            location  = Location.query.filter_by(name=locationName).first_or_404()
+            existing_seats = location.seats
             if form.validate_on_submit():
-                location_id_from_name  = Location.query.filter_by(name=form.location_name.data).first()
-                seat = Seat(location_name=form.location_name.data, seat_num=form.seat_num.data, \
-                where=location_id_from_name)
+                for s_num in form.seat_num.data.split(','):
+                    seat = Seat(location_name=locationName, seat_num=int(s_num), \
+                    where=location)
+                    db.session.add(seat)
+                if seat:
+                    db.session.commit()
+                else:
+                    db.session.rollback()
 
-                db.session.add(seat)
-                db.session.commit()
+                # db.session.add(seat)
+                # db.session.commit()
                 flash('New Seat is Added in!','success')
                 return redirect(url_for('main.home'))
-            return render_template('add_seat.html',title='Add Seat', form=form)
+            return render_template('add_seat.html',title='Add Seat', form=form, locationName=locationName, existing_seats=existing_seats)
         else:
             return redirect(url_for('main.home'))
     return redirect(url_for('main.home'))
