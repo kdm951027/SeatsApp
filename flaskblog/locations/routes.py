@@ -29,6 +29,10 @@ def add_seat(locationName):
             form = SeatForm()
             location  = Location.query.filter_by(name=locationName).first_or_404()
             existing_seats = location.seats
+            seat_nums = []
+            for seat in existing_seats:
+                seat_nums.append(int(seat.seat_num))
+
             if form.validate_on_submit():
                 for s_num in form.seat_num.data.split(','):
                     seat = Seat(location_name=locationName, seat_num=int(s_num), \
@@ -43,7 +47,7 @@ def add_seat(locationName):
                 # db.session.commit()
                 flash('New Seat is Added in!','success')
                 return redirect(url_for('main.home'))
-            return render_template('add_seat.html',title='Add Seat', form=form, locationName=locationName, existing_seats=existing_seats)
+            return render_template('add_seat.html',title='Add Seat', form=form, locationName=locationName, existing_seats=existing_seats, seat_nums=seat_nums)
         else:
             return redirect(url_for('main.home'))
     return redirect(url_for('main.home'))
@@ -52,7 +56,10 @@ def add_seat(locationName):
 def show_seats(name):
     location = Location.query.filter_by(name=name).first_or_404()
     seats = Seat.query.filter_by(where=location)
-    return render_template('location.html',seats=seats, location=location)
+    seat_nums = []
+    for seat in seats:
+        seat_nums.append(int(seat.seat_num))
+    return render_template('location.html',seats=seats,seat_nums=seat_nums,location=location)
 
 @locations.route("/reserve/<int:seat_id>/<string:location_name>", methods=['GET','POST'])
 @login_required

@@ -1,24 +1,38 @@
 {%extends "layout.html"%}
 {%block content%}
-  <h1 class="mb-3 text-center">[{{ location.name }}] has {{ seats.count() }} seats</h1>
+  <h1 class="mb-3 text-center">[{{ location.name }}] has {{ seat_nums|length }} seats</h1>
 
-  <div class="grid-container">
+  <div class="floor">
+    {%for i in range(1, 133)%}
+      <div style="grid-area:s{{i}}" id="{{i}}">
+        {% if i in seat_nums %}
+          <div class="occupied_seat_blocks">
+             <button class="btn btn-primary btn-xs">Reserve</button>
+          </div>
+        {% else %}
+            <div class="seat_blocks">{{i}}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- <div class="grid-container">
     {%for seat in seats%}
       {%if seat.users%}
         {%if seat.users[0] == current_user%}
-            <div class="grid-item occupied-seat">
-              <a href="#" data-toggle="tooltip" data-placement="top" title="{{seat.users[0].username}}">
-                <div class="seat_name">SEAT {{seat.seat_num}}</div>
-              </a>
-              <a href="{{ url_for('locations.leave', seat_id=seat.id, location_name=location.name) }}"><button class="button button1">Leave Seat</button></a>
-              <a href="{{ url_for('users.account') }}"><button class="button button1">Update</button></a>
+          <div class="grid-item occupied-seat">
+            <a href="#" data-toggle="tooltip" data-placement="top" title="{{seat.users[0].username}}">
+            <div class="seat_name">SEAT {{seat.seat_num}}</div>
+            </a>
+            <a href="{{ url_for('locations.leave', seat_id=seat.id, location_name=location.name) }}"><button class="button button1">Leave Seat</button></a>
+            <a href="{{ url_for('users.account') }}"><button class="button button1">Update</button></a>
             </div>
-          {%else%}
-            <div class="grid-item owned-seat">
-              <div class="seat_name">SEAT {{seat.seat_num}}</div>
-              <a href="{{ url_for('users.profile', username=(seat.users)[0].username)}}"><button class="button button1">See info</button></a>
-              <a href="{{ url_for('main.home', page=page_num) }}"><button class="button button1">Message</button></a>
-            </div>
+        {%else%}
+          <div class="grid-item owned-seat">
+            <div class="seat_name">SEAT {{seat.seat_num}}</div>
+            <a href="{{ url_for('users.profile', username=(seat.users)[0].username)}}"><button class="button button1">See info</button></a>
+            <a href="{{ url_for('main.home', page=page_num) }}"><button class="button button1">Message</button></a>
+          </div>
         {%endif%}
       {%else%}
         <div class="grid-item empty-seat">
@@ -28,7 +42,7 @@
         </div>
       {%endif%}
     {% endfor %}
-  </div>
+  </div> -->
 
   <script>
   $(document).ready(function(){
