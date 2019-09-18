@@ -30,13 +30,31 @@ def add_seat(locationName):
             location  = Location.query.filter_by(name=locationName).first_or_404()
             existing_seats = location.seats
             seat_nums = []
+
+
             for seat in existing_seats:
                 seat_nums.append(int(seat.seat_num))
 
             if form.validate_on_submit():
-                for s_num in form.seat_num.data.split(','):
-                    seat = Seat(location_name=locationName, seat_num=int(s_num), \
-                    where=location)
+                # for s_num in form.seat_num.data.split(','):
+                #     seat = Seat(location_name=locationName, seat_num=int(s_num), \
+                #     where=location)
+                #     db.session.add(seat)
+
+                new_seats = form.seat_num.data.split(',')
+                new_imgs = form.seat_img_ids.data.split(',')
+                seat_len = len(new_seats)
+                img_len = len(new_imgs)
+
+                if (seat_len != img_len):
+                    flash('Something went wrong when adding seat...!','danger')
+                    return redirect(url_for('main.home'))
+
+                for j in range(seat_len):
+                    cur_seat = int(new_seats[j])
+                    cur_img = int(new_imgs[j])
+                    seat = Seat(location_name=locationName, seat_num=cur_seat, \
+                    seat_img_id=cur_img,where=location)
                     db.session.add(seat)
                 if seat:
                     db.session.commit()
@@ -57,9 +75,11 @@ def show_seats(name):
     location = Location.query.filter_by(name=name).first_or_404()
     seats = Seat.query.filter_by(where=location)
     seat_nums = []
+    seat_imgs =[]
     for seat in seats:
         seat_nums.append(int(seat.seat_num))
-    return render_template('location.html',seats=seats,seat_nums=seat_nums,location=location)
+        seat_imgs.append(int(seat.seat_img_id))
+    return render_template('location.html',seats=seats,seat_nums=seat_nums,seat_imgs=seat_imgs,location=location)
 
 @locations.route("/reserve/<int:seat_id>/<string:location_name>", methods=['GET','POST'])
 @login_required

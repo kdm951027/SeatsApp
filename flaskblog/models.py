@@ -87,6 +87,7 @@ class Seat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     location_name = db.Column(db.String(100), nullable=False)
     seat_num = db.Column(db.Integer, nullable=False)
+    seat_img_id = db.Column(db.Integer, nullable=False)
     location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
     users = db.relationship('User', backref='seated', lazy=True)
 

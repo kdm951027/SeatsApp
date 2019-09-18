@@ -3,10 +3,10 @@
   <script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.5/lib/draggable.bundle.js"></script>
 
   <div class="floor_options">
-    {%for i in range(0, 12)%}
+    {%for i in range(1, 13)%}
     <div class="draggable_container">
-          <div style="background-color: white;" class="droppable draggable-dropzone--occupied">
-            <div style=" background-color: red;" class="draggable">op {{i}}</div>
+          <div style="background-color: white;" class="droppable draggable-dropzone--occupied" id={{i}} onclick="refill(this)">
+            <div class="draggable owned-seat_block_{{i}}" id={{i}}></div>
           </div>
     </div>
     {% endfor %}
@@ -61,7 +61,20 @@
               {% endfor %}
             </div>
           {% else %}
-             {{form.seat_num(class="form-control form-control-lg", id="floor_seats")}}
+             {{form.seat_num(class="form-control form-control-lg", id="floor_seats", value="")}}
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          {% if form.seat_img_ids.errors %}
+            {{form.seat_img_ids(class="form-control form-control-lg is-invalid")}}
+            <div class='invalid-feedback'>
+              {% for error in form.seat_img_ids.errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% else %}
+             {{form.seat_img_ids(class="form-control form-control-lg", id="floor_imgs", value="")}}
           {% endif %}
         </div>
 
@@ -74,64 +87,92 @@
 
   <script type="text/javascript">
 
-    function getPrev(evt, seats) {
+    function getPrev(evt, seats, imgs) {
       prev = document.getElementsByClassName("draggable-container--is-dragging")[0].id;
+      img = document.getElementsByClassName("draggable--original")[0].id;
       var index = seats.indexOf(prev);
       if (index > -1) {
-        seats.splice(index, 1);
+        seats.splice(index,1);
+        imgs.splice(index,1);
       }
-      return prev;
+      console.log("getPrev: seats are... ",seats);
+      var prev_img_array = [prev, img];
+      return prev_img_array;
     }
 
-    function addNewSeats(prev, seats) {
+    function addNewSeats(prev_and_img, seats, imgs) {
+      prev = prev_and_img[0];
+      img = prev_and_img[1];
       if (document.querySelector('.draggable-container--over') == null) {
-        console.log("not defined");
+        // console.log("not defined");
       }
       else{
         cur = document.getElementsByClassName("draggable-container--over")[0].id;
         if (prev == cur){
-          console.log("stayed");
+          // console.log("stayed");
         }
         else{
           seats.push(cur);
-          console.log("moved");
+          imgs.push(img);
+          // console.log("moved");
           modifyForm();
         }
       }
     }//end of addNewSeats
 
-    // function removeSeat(evt, seats) {
-    //   console.log(evt.sourceContainer);
-    // }
+    function refill(el) {
+      if (el.childElementCount < 1){
+        console.log(el.id);
+        //setting class attr to be draggable
+        var new_draggable = document.createElement("div");
+        var att1 = document.createAttribute("class");
+        att1.value = 'draggable owned-seat_block_'+el.id;
+        //setting id attr to be proper img
+        var att2 = document.createAttribute("id");
+        att2.value = ''+el.id;
+        new_draggable.setAttributeNode(att1);
+        new_draggable.setAttributeNode(att2);
+        el.appendChild(new_draggable);
+      }
+    }
 
-
-
+    //initial set up for draggable as suggested in their github
     const containers = document.querySelectorAll('.draggable_container');
     const droppable = new Draggable.Droppable(containers, {
       draggable: '.draggable',
       droppable: '.droppable'
     });
 
-
-
+    //global vars
     var added_seats = [];
-    var previous_spot = 0;
+    var added_imgs =[];
+    var previous_spot_img;
     var current_spot;
 
-    // function showAddedSeats() {
-    //   console.log(added_seats);
-    //   document.getElementById("floor_seats").value = added_seats.join();
-    // }
-
     function modifyForm() {
-      document.getElementById("floor_seats").value = added_seats.join();
+      var str1 = "";
+      var str2 = "";
+      for (var i in added_seats) {
+        if (added_seats[i] != ""){
+          str1 += added_seats[i];
+          str1 += ",";
+          str2 += added_imgs[i];
+          str2 += ",";
+        }
+      }
+      console.log("string for added_seat: ",str1);
+      console.log("string for adeed_img: ",str2);
+      document.getElementById("floor_seats").value = str1.slice(0, -1);
+      document.getElementById("floor_imgs").value = str2.slice(0, -1);
+      // console.log("the value is..",document.getElementById('floor_imgs').value);
       // document.getElementById("floor_seats").setAttribute('value', 'defaultValue');
       // console.log(document.getElementById("floor_seats").id);
     }
 
 
-  droppable.on('drag:start', (evt) => previous_spot = getPrev(evt, added_seats));
-  droppable.on('drag:stop', () => addNewSeats(previous_spot, added_seats));
+  droppable.on('drag:start', (evt) => previous_spot_img = getPrev(evt, added_seats, added_imgs));
+  droppable.on('drag:stop', () => addNewSeats(previous_spot_img, added_seats, added_imgs));
+  // droppable.on('drag:stop', (evt) => refill(evt));
 
   </script>
 
