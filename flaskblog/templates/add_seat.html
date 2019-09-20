@@ -11,6 +11,21 @@
     </div>
     {% endfor %}
   </div>
+  <!-- extra options like walls, printer, counter, etc.. -->
+  <div class="floor_options">
+    {%for i in range(13, 24)%}
+    <div class="draggable_container">
+          <div style="background-color: white;" class="droppable draggable-dropzone--occupied" id={{i}} onclick="refill(this)">
+            <div class="draggable owned-seat_block_{{i}}" id={{i}}></div>
+          </div>
+    </div>
+    {% endfor %}
+    <div class="draggable_container trash_can">
+      <div class="droppable" onclick="empty_trash_can(this)">
+      </div>
+    </div>
+  </div>
+
 
   <div class="floor">
     {%for i in range(1, 133)%}
@@ -24,11 +39,11 @@
     {% endfor %}
   </div>
 
-  <div>
+  <!-- <div>
     {%for ex_seat in existing_seats%}
       {{ex_seat.seat_num}}
     {% endfor %}
-  </div>
+  </div> -->
 
   <div class="content-section">
     <form method="POST" action="">
@@ -46,7 +61,6 @@
               {% endfor %}
             </div>
           {% else %}
-            <!-- {{form.seat_num(class="form-control form-control-lg", id="floor_seats")}} -->
              {{form.location_name(class="form-control form-control-lg", value=locationName)}}
           {% endif %}
         </div>
@@ -87,35 +101,45 @@
 
   <script type="text/javascript">
 
+    // function needed for addNewSeats() to insure that seat is added only when moved
     function getPrev(evt, seats, imgs) {
       prev = document.getElementsByClassName("draggable-container--is-dragging")[0].id;
       img = document.getElementsByClassName("draggable--original")[0].id;
+
+      // removing previous location data for new moving
       var index = seats.indexOf(prev);
       if (index > -1) {
         seats.splice(index,1);
         imgs.splice(index,1);
       }
-      console.log("getPrev: seats are... ",seats);
-      var prev_img_array = [prev, img];
-      return prev_img_array;
+      return [prev, img];
     }
 
+    // adds new seats to form input only when the seat is actually moved!
     function addNewSeats(prev_and_img, seats, imgs) {
       prev = prev_and_img[0];
       img = prev_and_img[1];
       if (document.querySelector('.draggable-container--over') == null) {
-        // console.log("not defined");
+        // return;
       }
       else{
         cur = document.getElementsByClassName("draggable-container--over")[0].id;
         if (prev == cur){
-          // console.log("stayed");
         }
         else{
-          seats.push(cur);
-          imgs.push(img);
-          // console.log("moved");
-          modifyForm();
+          if (document.getElementsByClassName("draggable-container--over")[0].classList.contains("trash_can")){
+            console.log("contains trash");
+            container_div = document.getElementsByClassName("draggable-container--over")[0].childNodes[1];
+            console.log(container_div.classList);
+            target = container_div.childNodes[1];
+
+          }
+
+          if (!(seats.includes(cur))){
+            seats.push(cur);
+            imgs.push(img);
+            modifyForm();
+          }
         }
       }
     }//end of addNewSeats
@@ -133,6 +157,17 @@
         new_draggable.setAttributeNode(att1);
         new_draggable.setAttributeNode(att2);
         el.appendChild(new_draggable);
+      }
+    }
+
+    function empty_trash_can(el) {
+      // console.log(el.childNodes[1]);
+      console.log(el.classList);
+      if (el.childElementCount > 0){
+        el.removeChild(el.childNodes[1]);
+        if (el.classList.contains("droppable")){
+          el.classList.remove("draggable-droppable--occupied");
+        }
       }
     }
 
@@ -164,15 +199,10 @@
       console.log("string for adeed_img: ",str2);
       document.getElementById("floor_seats").value = str1.slice(0, -1);
       document.getElementById("floor_imgs").value = str2.slice(0, -1);
-      // console.log("the value is..",document.getElementById('floor_imgs').value);
-      // document.getElementById("floor_seats").setAttribute('value', 'defaultValue');
-      // console.log(document.getElementById("floor_seats").id);
     }
 
-
-  droppable.on('drag:start', (evt) => previous_spot_img = getPrev(evt, added_seats, added_imgs));
-  droppable.on('drag:stop', () => addNewSeats(previous_spot_img, added_seats, added_imgs));
-  // droppable.on('drag:stop', (evt) => refill(evt));
+    droppable.on('drag:start', (evt) => previous_spot_img = getPrev(evt, added_seats, added_imgs));
+    droppable.on('drag:stop', () => addNewSeats(previous_spot_img, added_seats, added_imgs));
 
   </script>
 

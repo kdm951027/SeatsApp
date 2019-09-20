@@ -1,6 +1,6 @@
 {%extends "layout.html"%}
 {%block content%}
-  <h1 class="mb-3 text-center">[{{ location.name }}] has {{ seat_nums|length }} seats</h1>
+  <h1 class="mb-3 text-center">[{{ location.name }}] has {{ location.seats|length }} seats</h1>
 
   <div class="floor">
     {%for i in range(1, 133)%}
@@ -10,13 +10,39 @@
           {%for j in range(0, seat_nums|length)%}
             {% if (i==seat_nums[j]) %}
               <div class="seat_blocks owned-seat_block_{{seat_imgs[j]}}">
-                 <button class="btn btn-primary btn-xs">Reserve</button>
+                <!-- number 13 is the limit of chair and desk image. Beyond 13 is walls and others. -->
+                {% if (seat_imgs[j] < 13) %}
+                  {% for seat in seats %}
+                    {% if (i == seat.seat_num) %}
+                      {% if ((seat.users|length) > 0) %}
+                        {% if (seat.users[0] == current_user) %}
+                          <a href="{{ url_for('locations.leave', seat_id=seat.id, location_name=location.name) }}">
+                            <button class="button button3">Leave</button></a>
+                          <a href="{{ url_for('users.account') }}">
+                            <button class="button button4">update</button></a>
+                        {% else %}
+                          <a href="#" data-toggle="tooltip" data-placement="top" title="{{seat.users[0].username}}">
+                            <div>Seat {{i}}</div></a>
+                          <a href="{{ url_for('users.profile', username=(seat.users)[0].username)}}">
+                            <button class="button button2">{{seat.users[0].username}}</button></a>
+                          <a href="{{ url_for('main.home', page=page_num) }}">
+                            <button class="button button1">message</button></a>
+                        {% endif %}
+                      {% else %}
+                        <!-- <button class="btn btn-primary btn-xs">reserve</button> -->
+                        <a href="{{ url_for('locations.reserve', seat_id=seat.id, location_name=location.name) }}">
+                          <button class="button button1">reserve</button></a>
+                      {% endif %}
+
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
               </div>
             {% endif %}
           {% endfor %}
 
         {% else %}
-            <div class="seat_blocks">{{i}}</div>
+            <div class="seat_blocks"></div>
         {% endif %}
       </div>
     {% endfor %}

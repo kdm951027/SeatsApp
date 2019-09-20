@@ -35,7 +35,33 @@
   background-color: rgba(255, 255, 255, 0.8);
 }
 
-.button1 {font-size: 10px;}
+.seat_blocks > a {
+  opacity: 0.65;
+}
+
+.seat_blocks > a > div{
+  background-color: #D2691E;
+  font-size: 9px;
+  opacity: 0.6;
+  color: black;
+  font-weight: 700;
+}
+
+.button1 {
+  font-size: 10px;
+  font-weight: 700;}
+.button2 {
+  font-size: 10px;
+  background-color: #4CAF50;
+  font-weight: 700;}
+.button3 {
+  font-size: 10px;
+  background-color: #f44336;
+  font-weight: 700;}
+.button4 {
+  font-size: 9px;
+  background-color: #008CBA;
+  font-weight: 700;}
 
 div.seat_name {
   font-size: small;
@@ -65,9 +91,8 @@ div.seat_name {
 
 .seat_blocks {
   height: 70px;
-  margin-left: auto;
-  margin-right: auto;
   width: auto;
+  text-align: center;
 }
 
 .occupied_seat_blocks {
@@ -84,6 +109,7 @@ div.seat_name {
 }
 
 /* owned seat pictures */
+/* Could have been better with scss... but I already finished it */
 .owned-seat_block_1{
   background-image: url( ../floorplan_img/chair_desk_1.png);
   background-size: 100% 100%;
@@ -144,6 +170,67 @@ div.seat_name {
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
+.owned-seat_block_13{
+  background-image: url( ../floorplan_img/chair_desk_13.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.owned-seat_block_14{
+  background-image: url( ../floorplan_img/chair_desk_14.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.owned-seat_block_15{
+  background-image: url( ../floorplan_img/chair_desk_15.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.owned-seat_block_16{
+  background-image: url( ../floorplan_img/chair_desk_16.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.owned-seat_block_17{
+  background-image: url( ../floorplan_img/chair_desk_17.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.owned-seat_block_18{
+  background-image: url( ../floorplan_img/chair_desk_18.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.owned-seat_block_19{
+  background-image: url( ../floorplan_img/chair_desk_19.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.owned-seat_block_20{
+  background-image: url( ../floorplan_img/chair_desk_20.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.owned-seat_block_21{
+  background-image: url( ../floorplan_img/chair_desk_21.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.owned-seat_block_22{
+  background-image: url( ../floorplan_img/chair_desk_22.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.owned-seat_block_23{
+  background-image: url( ../floorplan_img/chair_desk_23.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.trash_can{
+  background-image: url( ../floorplan_img/trash_can.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
 
 .floor {
   display: grid;
@@ -163,12 +250,14 @@ div.seat_name {
     "s109 s110 s111 s112 s113 s114 s115 s116 s117 s118 s119 s120"
     "s121 s122 s123 s124 s125 s126 s127 s128 s129 s130 s131 s132";
 
-  background-color: #DCDCDC;
+  /* background-color: #DCDCDC; */
+  background-color: #FFFFF7;
   margin-bottom: 20px;
 }
 
 .floor > div {
-  border: 1px solid #000000;
+  border: 1px solid #FFE5CC;
+
 }
 
 .floor_options {
@@ -178,6 +267,8 @@ div.seat_name {
   grid-template-areas:
     "op1 op2 op3 op4 op5 op6 op7 op8 op9 op10 op11 op12";
   margin-bottom : 40px;
+  grid-gap: 5px;
+  padding: 5px
 }
 
 .floor_options > div > div {
