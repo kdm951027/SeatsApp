@@ -32,6 +32,8 @@
         <a class="mr-2" href="{{ url_for('locations.show_seats', name=location.name) }}"><button type="button" class="btn btn-warning">Visit!</button></a>
         {% if current_user.username == "admin" %}
             <a class="mr-2" href="{{ url_for('locations.add_seat', locationName = location.name) }}"><button type="button" class="btn btn-warning">Add Seats</button></a>
+            <a class="mr-2" href="{{ url_for('locations.remove_location', locationName = location.name) }}"><button type="button" class="btn btn-warning">Remove Location</button></a>
+
         {% endif %}
 
         <!-- <a href class="btn btn-warning stretched-link">Visit</a> -->

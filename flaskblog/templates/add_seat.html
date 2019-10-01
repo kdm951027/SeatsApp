@@ -31,7 +31,13 @@
     {%for i in range(1, 133)%}
       <div class="draggable_container" style="grid-area:s{{i}}" id="{{i}}">
         {% if i in seat_nums %}
-          <div class="seat_blocks added_seat"></div>
+          {%for j in range(0, seat_nums|length)%}
+            {% if (i==seat_nums[j]) %}
+              <div class="seat_blocks owned-seat_block_{{seat_imgs[j]}}"></div>
+            {% endif %}
+          {% endfor %}
+
+          <!-- <div class="seat_blocks added_seat"></div> -->
         {% else %}
           <div class="droppable"></div>
         {% endif %}
@@ -130,9 +136,6 @@
           if (document.getElementsByClassName("draggable-container--over")[0].classList.contains("trash_can")){
             console.log("contains trash");
             container_div = document.getElementsByClassName("draggable-container--over")[0].childNodes[1];
-            console.log(container_div.classList);
-            target = container_div.childNodes[1];
-
           }
 
           if (!(seats.includes(cur))){

@@ -16,6 +16,8 @@
                     {% if (i == seat.seat_num) %}
                       {% if ((seat.users|length) > 0) %}
                         {% if (seat.users[0] == current_user) %}
+                        <a href="#" data-toggle="tooltip" data-placement="top" title="{{seat.users[0].username}}">
+                          <div>Seat {{i}}</div></a>
                           <a href="{{ url_for('locations.leave', seat_id=seat.id, location_name=location.name) }}">
                             <button class="button button3">Leave</button></a>
                           <a href="{{ url_for('users.account') }}">
@@ -30,6 +32,8 @@
                         {% endif %}
                       {% else %}
                         <!-- <button class="btn btn-primary btn-xs">reserve</button> -->
+                        <a href="#" data-toggle="tooltip" data-placement="top" title="reserve the spot!">
+                          <div>Seat {{i}}</div></a>
                         <a href="{{ url_for('locations.reserve', seat_id=seat.id, location_name=location.name) }}">
                           <button class="button button1">reserve</button></a>
                       {% endif %}

@@ -74,7 +74,7 @@ class Location(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
-    seats = db.relationship('Seat', backref='where', lazy=True)
+    seats = db.relationship('Seat',cascade="all,delete,delete-orphan", backref='where')
 
     def __repr__(self):
         return f"Location('{self.name}','{self.image_file}')"
@@ -88,18 +88,24 @@ class Seat(db.Model):
     location_name = db.Column(db.String(100), nullable=False)
     seat_num = db.Column(db.Integer, nullable=False)
     seat_img_id = db.Column(db.Integer, nullable=False)
-    location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
     users = db.relationship('User', backref='seated', lazy=True)
+    location_id = db.Column(db.Integer, db.ForeignKey('location.id'))
 
     def __repr__(self):
         return f"Seat('{self.location_name}', '{self.seat_num}')"
 
-# class Message(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-#     content = db.Column(db.Text, nullable=False)
-#     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-#     receiver_id = db.relationship('User', backref='received', lazy=True)
+
+# def _create_database():
+#     """
+#     If this script is run directly, create all the tables necessary to run the
+#     application.
+#     """
+#     app = Flask(__name__)
+#     app.config.from_pyfile('./config.py')
+#     init_app(app)
+#     with app.app_context():
+#         db.create_all()
+#     print("All tables created")
 #
-#     def __repr__(self):
-#         return f"Post('{self.sender}','{self.date_posted}')"
+# if __name__ == '__main__':
+#     _create_database()

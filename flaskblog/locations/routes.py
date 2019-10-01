@@ -30,16 +30,13 @@ def add_seat(locationName):
             location  = Location.query.filter_by(name=locationName).first_or_404()
             existing_seats = location.seats
             seat_nums = []
-
+            seat_imgs =[]
 
             for seat in existing_seats:
                 seat_nums.append(int(seat.seat_num))
+                seat_imgs.append(int(seat.seat_img_id))
 
             if form.validate_on_submit():
-                # for s_num in form.seat_num.data.split(','):
-                #     seat = Seat(location_name=locationName, seat_num=int(s_num), \
-                #     where=location)
-                #     db.session.add(seat)
 
                 new_seats = form.seat_num.data.split(',')
                 new_imgs = form.seat_img_ids.data.split(',')
@@ -61,11 +58,10 @@ def add_seat(locationName):
                 else:
                     db.session.rollback()
 
-                # db.session.add(seat)
-                # db.session.commit()
                 flash('New Seat is Added in!','success')
                 return redirect(url_for('main.home'))
-            return render_template('add_seat.html',title='Add Seat', form=form, locationName=locationName, existing_seats=existing_seats, seat_nums=seat_nums)
+            return render_template('add_seat.html',title='Add Seat', form=form, locationName=locationName,\
+             existing_seats=existing_seats, seat_nums=seat_nums, seat_imgs=seat_imgs)
         else:
             return redirect(url_for('main.home'))
     return redirect(url_for('main.home'))
@@ -109,3 +105,16 @@ def leave(seat_id, location_name):
         flash('You left the seat','success')
         return redirect(url_for('locations.show_seats', name=location_name))
     return redirect(url_for('main.about'))
+
+@locations.route("/remove_location/<string:locationName>", methods=['GET','POST'])
+@login_required
+def remove_location(locationName):
+    if current_user.is_authenticated:
+        if (current_user.username == "admin"):
+            location = Location.query.filter_by(name=locationName).first_or_404()
+            location_id = location.id
+            db.session.delete(location)
+            db.session.commit()
+            flash("You removed the location",'success')
+            return redirect(url_for('main.home'))
+    return redirect(url_for('main.home'))
